@@ -1,4 +1,5 @@
 import React from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   Alert,
   Image,
@@ -7,20 +8,25 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { login } from '@/lib/appwrite';
+import { Redirect } from 'expo-router';
+import { useGlobalContext } from '@/lib/global-provider';
 import icons from '@/constants/icons';
 import images from '@/constants/images';
 
-const SignIn = () => {
+const Auth = () => {
+  const { refetch, loading, isLogged } = useGlobalContext();
+
+  if (!loading && isLogged) return <Redirect href='/' />;
 
   const handleLogin = async () => {
-    // const result = await login();
-    // if (result) {
-    //   refetch();
-    // } else {
-    //   Alert.alert('Error', 'Failed to login');
-    // }
-    Alert.alert('Error', 'Failed to login');
+    const result = await login();
+    if (result) {
+      refetch();
+    } else {
+      Alert.alert('Error', 'Failed to login');
+    }
   };
 
   return (
@@ -71,4 +77,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default Auth;
